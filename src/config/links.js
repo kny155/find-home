@@ -1,16 +1,16 @@
 export default {
-    MAIN_LINKS: [
-        {
-            label: "Map",
-            icon: 'map'
-        },
-        {
-            label: "Camera",
-            icon: 'photo_camera'
-        },
-        {
-            label: "FAQ",
-            icon: 'help'
-        }
-      ]
-}
+  MAIN_LINKS: [
+    {
+      label: "Home",
+      icon: "home"
+    },
+    {
+      label: "Camera",
+      icon: "photo_camera"
+    },
+    {
+      label: "Map",
+      icon: "map"
+    }
+  ]
+};

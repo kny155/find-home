@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import Hidden from "@material-ui/core/Hidden";
 import { makeStyles } from "@material-ui/core/styles";
 
-import config from "../../config";
+import {LINKS} from "../../config";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -21,14 +21,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const ToolBar = ({ setValue }) => {
+export const ToolBar = ({ value, setValue }) => {
   const classes = useStyles();
 
-  const links = config.MAIN_LINKS.map(({ label }, i) => (
+  const links = LINKS.MAIN_LINKS.map(({ label }, i) => (
     <Button
       className={classes.button}
       onClick={() => setValue(i)}
-      color="inherit"
+      disabled={value === i}
       size="small"
       key={i}
     >

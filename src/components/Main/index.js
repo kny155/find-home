@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Map } from "../Map";
-import { Help } from "../Help";
+import { Home } from "../Home";
 import { Camera } from "../Camera";
 
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 
-import config from "../../config";
+import {ENV} from "../../config";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const platformConfig = {
-  apikey: config.HERE_MAP_API_KEY
+  apikey: ENV.HERE_MAP_API_KEY
 };
 
 const mapConfig = {
@@ -36,15 +36,21 @@ const mapConfig = {
 };
 
 export const Main = ({ value }) => {
+  const [mapRendered, setMapRendered] = useState(false);
+  useEffect(() => {
+    if(value === 2) {
+      setMapRendered(true);
+    }
+  }, [value, mapRendered])
   const classes = useStyles();
 
   return (
     <Container component="main" className={classes.container} maxWidth={false}>
-      <Box hidden={value !== 0} style={{ height: "100%" }}>
-        <Map mapConfig={mapConfig} platformConfig={platformConfig} />
-      </Box>
+      {value === 0 && <Home />}
       {value === 1 && <Camera />}
-      {value === 2 && <Help />}
+      {mapRendered && <Box hidden={value !== 2} style={{ height: "100%" }}>
+        <Map mapConfig={mapConfig} platformConfig={platformConfig} />
+      </Box>}
     </Container>
   );
 };

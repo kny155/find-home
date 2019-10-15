@@ -1,7 +1,5 @@
 import env from './env';
 import links from './links';
 
-export default {
-    ...env,
-    ...links
-};
+export const ENV = {...env};
+export const LINKS = {...links};

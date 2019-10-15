@@ -8,13 +8,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const initMap = (elRef, mapConfig, platformConfig) => {
+const initMap = (el, mapConfig, platformConfig) => {
   const H = window.H;
   const platform = new H.service.Platform(platformConfig);
 
   const maptypes = platform.createDefaultLayers({});
 
-  const map = new H.Map(elRef.current, maptypes.vector.normal.map, mapConfig);
+  const map = new H.Map(el, maptypes.vector.normal.map, mapConfig);
   const provider = map.getBaseLayer().getProvider();
 
   new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
@@ -62,12 +62,13 @@ export const Map = ({ mapConfig, platformConfig }) => {
 
   useEffect(() => {
     if (!map) {
-      const { map, provider, H } = initMap(mapEl, mapConfig, platformConfig);
+      const { map, provider, H } = initMap(mapEl.current, mapConfig, platformConfig);
       setMap(map);
       setProvider(provider);
       setH(H);
     }
 
+    /*
     if (H) {
       watchGeo((() => {
         let parisMarker = null;
@@ -77,10 +78,10 @@ export const Map = ({ mapConfig, platformConfig }) => {
           }
           parisMarker = new H.map.Marker(geo);
           map.addObject(parisMarker);
-          console.log(geo);
         };
       })());
     }
+    */
   }, [mapConfig, platformConfig, map, H, provider]);
 
   const classes = useStyles();

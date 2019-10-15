@@ -5,7 +5,7 @@ import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import Icon from "@material-ui/core/Icon";
 import Hidden from "@material-ui/core/Hidden";
 
-import config from "../../config";
+import {LINKS} from "../../config";
 
 const useStyles = makeStyles({
   root: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   }
 });
 
-const links = config.MAIN_LINKS.map(({ label, icon }, i) => (
+const links = LINKS.MAIN_LINKS.map(({ label, icon }, i) => (
   <BottomNavigationAction label={label} icon={<Icon>{icon}</Icon>} key={i} />
 ));
 

@@ -11,7 +11,7 @@ export const App = () => {
 
   return (
     <Theme>
-      <ToolBar setValue={setValue} />
+      <ToolBar value={value} setValue={setValue} />
       <Main value={value} />
       <SimpleBottomNavigation value={value} setValue={setValue} />
     </Theme>
