@@ -1,90 +1,83 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
+import ReactMapGL, { FullscreenControl, GeolocateControl } from "react-map-gl";
+
 const useStyles = makeStyles(theme => ({
+  full: {
+    position: "relative",
+    width: "100%",
+    height: "100%"
+  },
   map: {
     height: "100%",
     width: "100%"
+  },
+  fab: {
+    margin: theme.spacing(1),
+    zIndex: 1
+  },
+  panel: {
+    display: "flex",
+    flexDirection: "column",
+    position: "absolute",
+    top: 0,
+    left: 0
   }
 }));
 
-const initMap = (el, mapConfig, platformConfig) => {
-  const H = window.H;
-  const platform = new H.service.Platform(platformConfig);
-
-  const maptypes = platform.createDefaultLayers({});
-
-  const map = new H.Map(el, maptypes.vector.normal.map, mapConfig);
-  const provider = map.getBaseLayer().getProvider();
-
-  new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-  // set the style on the existing layer
-  const style = new H.map.Style(
-    "dark.yaml",
-    "https://js.api.here.com/v3/3.1/styles/omv/"
-  );
-
-  provider.setStyle(style);
-
-  window.addEventListener("resize", () => {
-    map.getViewPort().resize();
-  });
-
-  return {
-    map,
-    provider,
-    H
-  };
+const initViewport = {
+  latitude: 37.7577,
+  longitude: -122.4376,
+  zoom: 8,
+  mapboxApiAccessToken:
+    "pk.eyJ1Ijoia255IiwiYSI6ImNqeHNydGNxOTBoZTIzZHFveHdiZTYwMGsifQ.ZqTDe62TXB1V2xkugfhCjQ"
 };
 
-const watchGeo = f => {
-  if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(position => {
-      const coord = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-
-      f(coord);
-    });
-  } else {
-    console.log("Geolocation is not supported by this browser.");
-    return null;
-  }
+const geolocateStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  padding: 10
 };
 
-export const Map = ({ mapConfig, platformConfig }) => {
-  const mapEl = useRef(null);
-  const [map, setMap] = useState(null);
-  const [provider, setProvider] = useState(null);
-  const [H, setH] = useState(null);
+const fullscreenControlStyle = {
+  position: "absolute",
+  top: 0,
+  right: 0,
+  padding: "10px"
+};
 
-  useEffect(() => {
-    if (!map) {
-      const { map, provider, H } = initMap(mapEl.current, mapConfig, platformConfig);
-      setMap(map);
-      setProvider(provider);
-      setH(H);
-    }
-
-    /*
-    if (H) {
-      watchGeo((() => {
-        let parisMarker = null;
-        return geo => {
-          if(parisMarker) {
-            map.removeObject(parisMarker);
-          }
-          parisMarker = new H.map.Marker(geo);
-          map.addObject(parisMarker);
-        };
-      })());
-    }
-    */
-  }, [mapConfig, platformConfig, map, H, provider]);
-
+export const Map = () => {
+  const [viewport, setViewport] = useState(initViewport);
   const classes = useStyles();
 
-  return <div className={classes.map} ref={mapEl} />;
+  const onViewportChange = viewport => {
+    const { width, height, ...etc } = viewport;
+    setViewport(etc);
+  };
+
+  return (
+    <div className={classes.full}>
+      <ReactMapGL
+        width="100%"
+        height="100%"
+        mapStyle="mapbox://styles/mapbox/dark-v9"
+        {...viewport}
+        onViewportChange={onViewportChange}
+        onLoad={kek => console.log(kek)}
+      >
+        <div style={geolocateStyle}>
+          <GeolocateControl
+            positionOptions={{ enableHighAccuracy: true }}
+            trackUserLocation={true}
+          />
+        </div>
+
+        <div style={fullscreenControlStyle}>
+          <FullscreenControl />
+        </div>
+      </ReactMapGL>
+    </div>
+  );
 };
